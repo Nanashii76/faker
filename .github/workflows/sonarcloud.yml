@@ -33,3 +33,13 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2.2.0 # Use a versão mais recente da action
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Seu token de segurança do SonarCloud
+        
+      - name: Run tests and collect coverage
+        run: |
+          coverage run -m pytest # Ou o comando para rodar seus testes (ex: python -m unittest discover)
+          coverage xml -o coverage.xml # Gera o relatório no formato XML
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2.2.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
