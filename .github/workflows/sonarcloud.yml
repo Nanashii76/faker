@@ -1,0 +1,35 @@
+name: Build and Analyze
+
+on:
+  push:
+    branches:
+      - main # ou master, dependendo do nome da sua branch principal
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build and Analyze
+    runs-on: ubuntu-latest # Ou windows-latest se preferir, mas ubuntu é mais comum e rápido para Python
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necessário para o SonarCloud analisar o histórico de commits
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' # Use a versão do Python que seu projeto usa (ex: '3.9', '3.10', '3.11')
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt # Se seu projeto tiver um requirements.txt
+          # pip install pytest # Exemplo se você usar pytest para testes
+
+      # Este é o passo crucial que executa o SonarScanner
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2.2.0 # Use a versão mais recente da action
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Seu token de segurança do SonarCloud
