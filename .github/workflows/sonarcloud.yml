@@ -20,16 +20,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x' # Use a versão do Python do seu projeto (ex: '3.9', '3.10', '3.11')
+          python-version: '3.x' # A versão do Python do seu projeto (ex: '3.9', '3.10', '3.11')
 
-      # Instale apenas as dependências mínimas para o SonarScanner se o Faker não tiver um requirements.txt
-      # e você não precisa de pytest/coverage para esta análise simplificada.
-      - name: Install minimal dependencies
+      # Não instalamos nenhuma dependência de teste ou mesmo o Faker em si.
+      # Apenas garantimos que o pip esteja atualizado.
+      - name: Install minimal dependencies for SonarScanner
         run: |
           python -m pip install --upgrade pip
-          # Nenhuma outra instalação pip aqui se você não precisa de testes/cobertura agora.
 
-      # Executar o SonarCloud Scan (sem se preocupar com testes ou cobertura por enquanto)
+      # Executar o SonarCloud Scan
+      # Ele vai analisar os arquivos .py sem rodar testes ou coletar cobertura.
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.2.0
         env:
