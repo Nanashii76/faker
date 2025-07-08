@@ -3,7 +3,7 @@ name: Build and Analyze
 on:
   push:
     branches:
-      - main # ou master, dependendo do nome da sua branch principal
+      - master # ou master, dependendo do nome da sua branch principal
   pull_request:
     types: [opened, synchronize, reopened]
 
