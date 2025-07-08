@@ -3,7 +3,7 @@ name: Build and Analyze
 on:
   push:
     branches:
-      - master # ou main, dependendo do nome da sua branch principal
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -20,21 +20,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x' # Use a versão do Python que seu projeto usa (ex: '3.9', '3.10', '3.11')
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest coverage # Instale pytest e coverage para testes e cobertura
+          pip install pytest coverage  # Instale pytest e coverage
 
-      # Primeiro, rode os testes e colete a cobertura
+      # Run tests and collect coverage (este passo já é suficiente para o SonarCloud)
       - name: Run tests and collect coverage
         run: |
-          coverage run -m pytest # Ou o comando para rodar seus testes (ex: python -m unittest discover)
-          coverage xml -o coverage.xml # Gera o relatório no formato XML
+          # O Faker precisa ser instalado no ambiente virtual para que os testes funcionem
+          pip install -e .
+          coverage run -m pytest tests/ # Certifique-se de apontar para a pasta de testes do Faker
+          coverage xml -o coverage.xml
 
-      # Depois, execute o SonarCloud Scan para enviar a análise (incluindo a cobertura)
+      # Execute o SonarCloud Scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.2.0
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Seu token de segurança do SonarCloud
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
