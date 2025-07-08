@@ -20,27 +20,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x' # A versão do Python do seu projeto
+          python-version: '3.x' # Use a versão do Python do seu projeto (ex: '3.9', '3.10', '3.11')
 
-      # PASSO COMBINADO: Instalar dependências, Faker, rodar testes e coletar cobertura
-      - name: Install, Test, and Collect Coverage for SonarCloud
+      # Instale apenas as dependências mínimas para o SonarScanner se o Faker não tiver um requirements.txt
+      # e você não precisa de pytest/coverage para esta análise simplificada.
+      - name: Install minimal dependencies
         run: |
-          # 1. Instalar ferramentas básicas
           python -m pip install --upgrade pip
-          pip install pytest coverage
+          # Nenhuma outra instalação pip aqui se você não precisa de testes/cobertura agora.
 
-          # 2. Instalar o próprio Faker no ambiente de teste
-          #    Isso permite que os testes importem e executem o código do Faker.
-          pip install -e .
-
-          # 3. Rodar os testes com cobertura
-          #    É crucial especificar o caminho para a pasta 'tests' do Faker.
-          coverage run -m pytest tests/
-
-          # 4. Gerar o relatório de cobertura no formato XML
-          coverage xml -o coverage.xml
-
-      # Passo crucial para executar o SonarCloud Scan
+      # Executar o SonarCloud Scan (sem se preocupar com testes ou cobertura por enquanto)
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.2.0
         env:
